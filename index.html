@@ -3,198 +3,231 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IQC Generator Pro</title>
-
+<title>IQC Clone</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
 body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-    background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    color:white;
+margin:0;
+background:#0f0f12;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
 }
 
-.container{
-    width:380px;
-    background:#111827;
-    padding:20px;
-    border-radius:20px;
-    box-shadow:0 0 40px rgba(0,0,0,0.6);
+/* PHONE FRAME */
+.phone{
+width:390px;
+height:844px;
+background:#000;
+border-radius:55px;
+padding:15px;
+box-shadow:0 40px 80px rgba(0,0,0,0.7);
+position:relative;
+overflow:hidden;
 }
 
-h2{
-    text-align:center;
-    margin-bottom:15px;
-    background:linear-gradient(90deg,#ff00cc,#3333ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+/* Dynamic Island */
+.island{
+position:absolute;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+width:120px;
+height:30px;
+background:#000;
+border-radius:20px;
+z-index:10;
 }
 
-input, textarea{
-    width:100%;
-    border:none;
-    border-radius:12px;
-    padding:8px;
-    background:#1f2937;
-    color:white;
-    margin-bottom:8px;
-    font-size:14px;
+/* Status Bar */
+.status{
+position:absolute;
+top:15px;
+width:100%;
+padding:0 25px;
+display:flex;
+justify-content:space-between;
+color:white;
+font-size:14px;
+z-index:5;
 }
 
-textarea{
-    height:70px;
-    resize:none;
+/* Chat Background */
+.chat{
+position:absolute;
+top:60px;
+bottom:0;
+left:0;
+right:0;
+background:url("https://i.imgur.com/8Km9tLL.jpg");
+background-size:cover;
+background-position:center;
+padding:20px;
 }
+
+/* Blur overlay */
+.chat::before{
+content:"";
+position:absolute;
+inset:0;
+backdrop-filter:blur(20px);
+background:rgba(0,0,0,0.35);
+}
+
+/* Chat content */
+.chat-content{
+position:relative;
+margin-top:40px;
+}
+
+/* Reaction Bar */
+.reaction{
+display:inline-flex;
+gap:6px;
+background:rgba(40,40,45,0.9);
+padding:6px 12px;
+border-radius:20px;
+font-size:15px;
+margin-bottom:6px;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* Bubble */
+.bubble{
+display:inline-block;
+background:#2c2c2e;
+color:white;
+padding:12px 16px;
+border-radius:22px;
+max-width:75%;
+font-size:16px;
+line-height:1.4;
+box-shadow:0 6px 15px rgba(0,0,0,0.4);
+}
+
+/* Time */
+.time{
+font-size:12px;
+opacity:0.6;
+margin-top:5px;
+text-align:right;
+}
+
+/* Powered Text */
+.powered{
+position:absolute;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+font-size:12px;
+color:#aaa;
+opacity:0.7;
+}
+
+/* Controls */
+.controls{
+position:fixed;
+bottom:20px;
+right:20px;
+width:260px;
+background:#1c1c1e;
+padding:15px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+color:white;
+}
+
+input,textarea{
+width:100%;
+margin-bottom:8px;
+padding:8px;
+border-radius:10px;
+border:none;
+background:#2c2c2e;
+color:white;
+}
+
+textarea{resize:none;height:60px;}
 
 button{
-    width:100%;
-    padding:10px;
-    margin-top:6px;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(90deg,#ff00cc,#3333ff);
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.preview{
-    margin-top:20px;
-    padding:20px;
-    background:#000;
-    border-radius:20px;
-    display:none;
-}
-
-.chatHeader{
-    display:flex;
-    align-items:center;
-    margin-bottom:10px;
-}
-
-.avatar{
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    background:#444;
-    margin-right:10px;
-    object-fit:cover;
-}
-
-.username{
-    font-weight:bold;
-    font-size:14px;
-}
-
-.reaction{
-    background:#2d3748;
-    padding:5px 10px;
-    border-radius:20px;
-    display:inline-block;
-    font-size:14px;
-    margin-bottom:8px;
-}
-
-.bubble{
-    background:#1f2937;
-    padding:12px 15px;
-    border-radius:20px;
-    display:inline-block;
-    max-width:80%;
-}
-
-.time{
-    font-size:11px;
-    opacity:0.6;
-    margin-top:5px;
-    text-align:right;
+width:100%;
+padding:8px;
+border:none;
+border-radius:12px;
+background:linear-gradient(90deg,#ff00cc,#3333ff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+margin-top:5px;
 }
 </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>IQC Generator Pro</h2>
+<div class="phone" id="capture">
 
-    <input type="text" id="username" placeholder="Username">
-    <input type="time" id="time">
-    <input type="file" id="avatarInput" accept="image/*">
-    <textarea id="message" placeholder="Tulis pesan..."></textarea>
+<div class="island"></div>
 
-    <button onclick="generate()">Generate</button>
-    <button onclick="downloadImage()">Download PNG</button>
+<div class="status">
+<div id="statusTime">22:23</div>
+<div>📶 100%</div>
+</div>
 
-    <div class="preview" id="chatPreview">
-        <div class="chatHeader">
-            <img id="avatarPreview" class="avatar">
-            <div class="username" id="usernamePreview"></div>
-        </div>
+<div class="chat">
+<div class="chat-content">
 
-        <div class="reaction">👍 ❤️ 😂 😮 😢 🙏</div>
+<div class="reaction">👍 ❤️ 😂 😮 😢 🙏</div>
 
-        <div class="bubble">
-            <div id="chatText"></div>
-            <div class="time" id="chatTime"></div>
-        </div>
-    </div>
+<div class="bubble">
+<div id="chatText">Pesan akan muncul di sini</div>
+<div class="time" id="chatTime">22:23</div>
+</div>
+
+</div>
+</div>
+
+<div class="powered">★ Powered by KalsNotDev ★</div>
+
+</div>
+
+<div class="controls">
+<input type="time" id="inputTime">
+<textarea id="inputMsg" placeholder="Tulis pesan..."></textarea>
+<button onclick="generate()">Generate</button>
+<button onclick="downloadImage()">Simpan PNG</button>
 </div>
 
 <script>
-let avatarData = "";
-
-document.getElementById("avatarInput").addEventListener("change", function(e){
-    const reader = new FileReader();
-    reader.onload = function(){
-        avatarData = reader.result;
-    }
-    reader.readAsDataURL(e.target.files[0]);
-});
-
 function generate(){
-    const user = document.getElementById("username").value;
-    const msg = document.getElementById("message").value;
-    let time = document.getElementById("time").value;
+let msg=document.getElementById("inputMsg").value;
+let time=document.getElementById("inputTime").value;
 
-    if(msg.trim() === ""){
-        alert("Isi pesan dulu bro 😭");
-        return;
-    }
+if(msg.trim()==""){alert("Isi pesan dulu 😭");return;}
 
-    if(time === ""){
-        const now = new Date();
-        time = now.getHours().toString().padStart(2,'0') + ":" +
-               now.getMinutes().toString().padStart(2,'0');
-    }
+if(time==""){
+let now=new Date();
+time=now.getHours().toString().padStart(2,'0')+":"+
+now.getMinutes().toString().padStart(2,'0');
+}
 
-    document.getElementById("usernamePreview").innerText = user || "User";
-    document.getElementById("chatText").innerText = msg;
-    document.getElementById("chatTime").innerText = time;
-
-    if(avatarData !== ""){
-        document.getElementById("avatarPreview").src = avatarData;
-    } else {
-        document.getElementById("avatarPreview").src = "";
-    }
-
-    document.getElementById("chatPreview").style.display = "block";
+document.getElementById("chatText").innerText=msg;
+document.getElementById("chatTime").innerText=time;
+document.getElementById("statusTime").innerText=time;
 }
 
 function downloadImage(){
-    const preview = document.getElementById("chatPreview");
-
-    html2canvas(preview).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "chat.png";
-        link.href = canvas.toDataURL();
-        link.click();
-    });
+html2canvas(document.getElementById("capture"),{scale:2}).then(canvas=>{
+let link=document.createElement("a");
+link.download="chat.png";
+link.href=canvas.toDataURL();
+link.click();
+});
 }
 </script>
 
 </body>
-    </html>
+</html>
